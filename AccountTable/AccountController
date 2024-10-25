@@ -1,0 +1,69 @@
+// public with sharing class AccountHelper {
+//     @AuraEnabled(cacheable=true)
+//     public static List<Account> getAccountList() {
+//         return [SELECT Id, Name, Type, Rating,
+//                 Phone, Website, AnnualRevenue
+//             FROM Account];
+//     }
+// }
+public with sharing class AccountController {
+   @AuraEnabled(cacheable=true)
+        public static List<accountWrapper> getAccounts() {
+            List<accountWrapper> wraperList = new List<accountWrapper>();
+        
+            Integer count = 1;
+            for(Account acc : [SELECT Id, Name, (SELECT Id,Name, Email, Phone FROM Contacts) FROM Account LIMIT 5]) {
+                accountWrapper wrp = new accountWrapper();
+                wrp.index = String.valueOf(count);
+                wrp.Id = acc.Id;
+                wrp.accountName = acc.Name;
+                wrp.account = acc;
+                wrp.contacts = acc.Contacts;
+                count++;
+                wraperList.add(wrp);
+            }
+            return wraperList;
+        }
+
+    
+    @AuraEnabled 
+    public static void updateRecord(List<accountWrapper> accWrapper) {
+        
+        Map<Id,Account> accIdVsRec = new Map<Id,Account>();
+        List<Contact> contactsToUpdate = new List<Contact>();
+
+        
+        for(accountWrapper wrp :accWrapper ){
+            accIdVsRec.put(wrp.account.Id, wrp.account);
+            contactsToUpdate.addAll(wrp.contacts);
+          
+            System.debug(wrp.account.Name);
+             System.debug(wrp.contacts);
+        }
+        try{
+            update accIdVsRec.Values();
+            update contactsToUpdate;
+        }catch(exception e){
+			 throw new AuraHandledException('Error updating records: ' + e.getMessage());
+        }
+
+    }
+    @AuraEnabled(cacheable=true)
+    public static List<Contact> getContactsByAccountId(Id accountId) {
+        return [SELECT Id, Name, Email, Phone FROM Contact WHERE AccountId = :accountId];
+
+    }
+
+    public class accountWrapper{
+        @AuraEnabled
+        public String index;
+        @AuraEnabled
+        public String Id;
+        @AuraEnabled
+         public String accountName;
+        @AuraEnabled
+         public Account account { get; set; }
+         @AuraEnabled
+         public List<Contact> contacts { get; set; }
+    }
+}
