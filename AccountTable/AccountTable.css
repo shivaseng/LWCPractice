@@ -1,0 +1,8 @@
+.slds-table_header-fixed_container {
+    overflow-x: auto;
+}
+
+.slds-table {
+    width: 100%;
+    table-layout: auto;
+}

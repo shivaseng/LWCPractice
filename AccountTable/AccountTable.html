@@ -1,0 +1,74 @@
+<template>
+    <lightning-card title="Custom Account and Contact Table" icon-name="custom:custom63">
+        <div class="slds-table_header-fixed_container">
+            <table class="slds-table slds-table_cell-buffer slds-table_bordered">
+                <thead>
+                    <tr class="slds-text-title_caps">
+                        <th scope="col">Account Name</th>
+                        <th scope="col">Account Phone</th>
+                        <th scope="col">Contact Name</th>
+                        <th scope="col">Contact Email</th>
+                        <th scope="col">Contact Phone</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <template for:each={data} for:item="record">
+                        <tr key={record.contactId}>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="accountName" 
+                                    value={record.accountName} 
+                                    data-id={record.accountId}
+                                    onchange={handleInputChange}
+                                    class="slds-input"
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="accountPhone" 
+                                    value={record.accountPhone} 
+                                    data-id={record.accountId}
+                                    onchange={handleInputChange}
+                                    class="slds-input"
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="text" 
+                                    name="contactName" 
+                                    value={record.contactName} 
+                                    data-id={record.contactId}
+                                    onchange={handleInputChange}
+                                    class="slds-input"
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="email" 
+                                    name="contactEmail" 
+                                    value={record.contactEmail} 
+                                    data-id={record.contactId}
+                                    onchange={handleInputChange}
+                                    class="slds-input"
+                                />
+                            </td>
+                            <td>
+                                <input 
+                                    type="tel" 
+                                    name="contactPhone" 
+                                    value={record.contactPhone} 
+                                    data-id={record.contactId}
+                                    onchange={handleInputChange}
+                                    class="slds-input"
+                                />
+                            </td>
+                        </tr>
+                    </template>
+                </tbody>
+            </table>
+        </div>
+        <lightning-button label="Submit" variant="brand" class="slds-m-top_medium" onclick={handleSave}></lightning-button>
+    </lightning-card>
+</template>
